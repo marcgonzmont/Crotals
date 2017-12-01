@@ -1,7 +1,7 @@
 import cv2
 import argparse
-from Delivery1.myPackage import tools as tl
-from Delivery1.myPackage import imageProcess as imp
+from Crotals.myPackage import tools as tl
+from Crotals.myPackage import imageProcess as imp
 
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
