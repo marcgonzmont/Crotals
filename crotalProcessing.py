@@ -30,13 +30,13 @@ if __name__ == '__main__':
     # Process reference image OCR-A or OCR-B to extract the digits
     reference = args["OCRreferenceA"] if args.get("OCRreferenceA") else args.get("OCRreferenceB")
     ocrDict = imp.extractDigitsOCR(reference)
-    # if args.get("referenceA"):
-    #     ocrDict= imp.extractDigitsOCR(args["referenceA"])
-    # elif args.get("referenceB"):
-    #     ocrDict = imp.extractDigitsOCR(args["referenceB"])
+    if args.get("referenceA"):
+        ocrDict= imp.extractDigitsOCR(args["referenceA"])
+    elif args.get("referenceB"):
+        ocrDict = imp.extractDigitsOCR(args["referenceB"])
 
-    # print(ocrList)
-    # cv2.imshow("OCR-A", cv2.imread(ocrList[0]))
+    print(reference)
+    # cv2.imshow("OCR-A", cv2.imread(reference))
     # cv2.waitKey(5000)
     # cv2.destroyAllWindows()
 
@@ -46,7 +46,8 @@ if __name__ == '__main__':
     # idx = 1
     # image = cv2.imread(training_images[idx], 0)
     for img in training_images:
+        # imp.calcHistogram(img)
         # imp.crotalContour(img)
-        image_rotated = imp.skewCorrection(img)
-    # plt.hist(image_rotated.ravel(), 256, [0, 256])
-    # plt.show()
+        imp.skewCorrection2(img)
+        # image_rotated = imp.skewCorrection(img)
+

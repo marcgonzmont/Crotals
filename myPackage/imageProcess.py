@@ -4,13 +4,26 @@ from imutils import contours
 import numpy as np
 from Crotals.myPackage import tools as tl
 from matplotlib import pyplot as plt
+from os.path import basename
 
+def calcHistogram(nameImage):
+    image = cv2.imread(nameImage)
+    image_g = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    hist, bins = np.histogram(image.ravel(), 256, [0, 256])
+    # Plot the original image and his histogram
+    fig = plt.figure()
+    plt.subplot(121), plt.imshow(image_g)
+    plt.gray()
+    plt.axis('off')
+    plt.subplot(122), plt.hist(hist, bins, [0, 256])
+    plt.gray()
+    fig.suptitle(basename(nameImage) + " image and Histogram", fontsize=14)
+
+    plt.show()
 
 def crotalContour(nameImage):
     image = cv2.imread(nameImage)
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    # plt.hist(gray.ravel(), 256, [0, 256])
-    # plt.show()
     thresh = cv2.threshold(gray, 0, 50, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
     # thresh_pad = cv2.copyMakeBorder(thresh, 20, 30, 30, 20, cv2.BORDER_CONSTANT, value=(0, 0, 0))
     contours = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[1]
@@ -31,7 +44,10 @@ def crotalContour(nameImage):
     '''
     # find the largest contour
     rect = cv2.minAreaRect(max(contours, key = cv2.contourArea))
+    angle = rect[-1]
     print("Minimum area: {}".format(cv2.contourArea(max(contours, key = cv2.contourArea))))
+    print("--- CONTOUR PROCESSING INFORMATION ---\n"
+          "Rotation angle of the image '{}': {:.3f}".format(basename(nameImage), angle))
     box = cv2.boxPoints(rect)
     # convert all coordinates floating point values to int
     box = np.int0(box)
@@ -64,11 +80,15 @@ def crotalContour(nameImage):
 
     cv2.drawContours(erosion, contours, -1, (0, 0, 255), 2)
     '''
-    tl.plt.imshow(thresh, 'gray')
-    tl.plt.show()
+    plt.subplot(121), plt.imshow(image)
+    plt.gray()
+    plt.axis('off')
+    plt.subplot(122), plt.imshow(thresh)
+    plt.gray()
+    plt.axis('off')
     # tl.plt.imshow(crop, 'gray')
     # tl.plt.show()
-    tl.plt.imshow(image, 'gray')
+
     tl.plt.show()
 
 def skewCorrection(nameImage):
@@ -93,11 +113,11 @@ def skewCorrection(nameImage):
     # convert all coordinates floating point values to int
     box = np.int0(box)
     # draw a red 'nghien' rectangle
-    # cv2.drawContours(image, [box], 0, (255, 255, 0), 2)
-    cv2.drawContours(thresh_pad, [box], 0, (255, 255, 255), 2)
+    cv2.drawContours(image, [box], 0, (255, 255, 0), 2)
+
 
     angle = rect[-1]
-    print(angle)
+    # print(angle)
     if angle < -45:
         angle = -(90 + angle)
 
@@ -114,16 +134,87 @@ def skewCorrection(nameImage):
     rotated_th = cv2.warpAffine(thresh_pad, M, (w, h),
                              flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
 
+    cv2.drawContours(rotated, [box], 0, (255, 255, 0), 2)
+
     titles = ["original", "gray", "thresh_pad", "rotated", "rotated thresh"]
     images = [image, gray, thresh_pad, rotated, rotated_th]
     title = "Test"
     tl.plotImages(titles,images, title, 2, 3)
     # show the output image
-    print("--- PROCESSING INFORMATION ---\n"
-          "Rotation angle of the crotal: {:.3f}".format(angle))
+    print("--- SKEW PROCESSING INFORMATION ---\n"
+          "Rotation angle of the image '{}': {:.3f}\n".format(basename(nameImage), angle))
 
 
-    return rotated
+    # return rotated
+
+def skewCorrection2(nameImage):
+    image = cv2.imread(nameImage)
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    thresh = cv2.threshold(gray, 0, 50, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
+    thresh_pad = cv2.copyMakeBorder(thresh, 10, 10, 10, 10, cv2.BORDER_CONSTANT, value=(0, 0, 0))
+    # thresh_pad = cv2.copyMakeBorder(thresh, 20, 30, 30, 20, cv2.BORDER_CONSTANT, value=(0, 0, 0))
+    contours = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[1]
+    '''
+    for c in contours:
+        # get the bounding rect
+        x, y, w, h = cv2.boundingRect(c)
+        # draw a green rectangle to visualize the bounding rect
+        cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
+
+        # get the min area rect
+        rect = cv2.minAreaRect(c)
+        box = cv2.boxPoints(rect)
+        # convert all coordinates floating point values to int
+        box = np.int0(box)
+        # draw a red 'nghien' rectangle
+        cv2.drawContours(image, [box], 0, (255, 255, 0), 2)
+    '''
+    # find the largest contour
+    rect = cv2.minAreaRect(max(contours, key=cv2.contourArea))
+    angle = rect[-1]
+    # contours = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[1]
+    # rect = cv2.minAreaRect(max(contours, key=cv2.contourArea))
+    # print("Minimum area: {}".format(cv2.contourArea(max(contours, key=cv2.contourArea))))
+    box = cv2.boxPoints(rect)
+    # convert all coordinates floating point values to int
+    box = np.int0(box)
+    # draw a red 'nghien' rectangle
+    cv2.drawContours(image, [box], 0, (255, 255, 0), 2)
+
+    # print(angle)
+    if angle < -45:
+        # angle_f = -(90 + angle)
+        angle_f = (90 + angle)
+        print("{:.3f} < -45 --> {:.3f}".format(angle, angle_f))
+
+    # otherwise, just take the inverse of the angle to make
+    # it positive
+    else:
+        # angle_f = -angle
+        angle_f = angle
+        print("{:.3f} > -45 --> {:.3f}".format(angle, angle_f))
+    # rotate the image to deskew it
+    (h, w) = image.shape[:2]
+    center = (w // 2, h // 2)
+    M = cv2.getRotationMatrix2D(center, angle_f, 1.0)
+    rotated = cv2.warpAffine(image, M, (w, h),
+                             flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
+    rotated_th = cv2.warpAffine(thresh_pad, M, (w, h),
+                             flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
+
+    cv2.drawContours(rotated, [box], 0, (255, 255, 0), 2)
+
+    titles = ["original", "gray", "thresh_pad", "rotated", "rotated thresh"]
+    images = [image, gray, thresh_pad, rotated, rotated_th]
+    title = "Test"
+    tl.plotImages(titles,images, title, 2, 3)
+    # show the output image
+    print("--- SKEW PROCESSING INFORMATION ---\n"
+          "Rotation angle of the image '{}': {:.3f}\n"
+          "Final angle: {:.3f}".format(basename(nameImage), angle, angle_f))
+
+
+    # return rotated
 
 def extractDigitsOCR(ocrRef):
     dict_list = []
@@ -159,6 +250,12 @@ def extractDigitsOCR(ocrRef):
     return digits
 
 def processImage(in_image):
+    '''
+    The 'processImage' function is the main in the current package. This function first corrects
+    the angle of the crotal and then, prepares the image applying some filters as top-hat and closing.
+    :param in_image:
+    :return:
+    '''
     image_rotated = skewCorrection(in_image)
 
     # initialize a rectangular and square kernels for top-hat morphological and closing

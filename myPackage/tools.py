@@ -39,7 +39,7 @@ def natSort(list):
 def plotImages(titles, images, title, row, col):
     fig = plt.figure()
     for i in range(len(images)):
-        plt.subplot(row, col, i + 1), plt.imshow(images[i], 'gray')
+        plt.subplot(row, col, i + 1), plt.imshow(images[i])     #, 'gray'
         if len(titles) != 0:
             plt.title(titles[i])
         plt.gray()
