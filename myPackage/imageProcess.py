@@ -172,9 +172,6 @@ def skewCorrection2(nameImage):
     # find the largest contour
     rect = cv2.minAreaRect(max(contours, key=cv2.contourArea))
     angle = rect[-1]
-    # contours = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[1]
-    # rect = cv2.minAreaRect(max(contours, key=cv2.contourArea))
-    # print("Minimum area: {}".format(cv2.contourArea(max(contours, key=cv2.contourArea))))
     box = cv2.boxPoints(rect)
     # convert all coordinates floating point values to int
     box = np.int0(box)
@@ -198,9 +195,9 @@ def skewCorrection2(nameImage):
     center = (w // 2, h // 2)
     M = cv2.getRotationMatrix2D(center, angle_f, 1.0)
     rotated = cv2.warpAffine(image, M, (w, h),
-                             flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
+                             flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_CONSTANT, borderValue= (0, 0, 0)) # BORDER_REPLICATE
     rotated_th = cv2.warpAffine(thresh_pad, M, (w, h),
-                             flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
+                             flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_CONSTANT, borderValue= (0, 0, 0))
 
     cv2.drawContours(rotated, [box], 0, (255, 255, 0), 2)
 
