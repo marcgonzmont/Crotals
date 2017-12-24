@@ -1,267 +1,122 @@
 import cv2
-import imutils
-from imutils import contours
 import numpy as np
-from Crotals.myPackage import tools as tl
+from myPackage import tools as tl
 from matplotlib import pyplot as plt
 from os.path import basename
+from sklearn.cluster import KMeans
 
-def calcHistogram(nameImage):
-    image = cv2.imread(nameImage)
-    image_g = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    hist, bins = np.histogram(image.ravel(), 256, [0, 256])
-    # Plot the original image and his histogram
-    fig = plt.figure()
-    plt.subplot(121), plt.imshow(image_g)
-    plt.gray()
-    plt.axis('off')
-    plt.subplot(122), plt.hist(hist, bins, [0, 256])
-    plt.gray()
-    fig.suptitle(basename(nameImage) + " image and Histogram", fontsize=14)
 
-    plt.show()
-
-def crotalContour(nameImage):
+def skewCorrection(nameImage, training):
     image = cv2.imread(nameImage)
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    thresh = cv2.threshold(gray, 0, 50, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
-    # thresh_pad = cv2.copyMakeBorder(thresh, 20, 30, 30, 20, cv2.BORDER_CONSTANT, value=(0, 0, 0))
+    thresh = cv2.threshold(gray, 100, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
     contours = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[1]
-    '''
-    for c in contours:
-        # get the bounding rect
-        x, y, w, h = cv2.boundingRect(c)
-        # draw a green rectangle to visualize the bounding rect
-        cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
-        # get the min area rect
-        rect = cv2.minAreaRect(c)
-        box = cv2.boxPoints(rect)
-        # convert all coordinates floating point values to int
-        box = np.int0(box)
-        # draw a red 'nghien' rectangle
-        cv2.drawContours(image, [box], 0, (255, 255, 0), 2)
-    '''
-    # find the largest contour
-    rect = cv2.minAreaRect(max(contours, key = cv2.contourArea))
-    angle = rect[-1]
-    print("Minimum area: {}".format(cv2.contourArea(max(contours, key = cv2.contourArea))))
-    print("--- CONTOUR PROCESSING INFORMATION ---\n"
-          "Rotation angle of the image '{}': {:.3f}".format(basename(nameImage), angle))
-    box = cv2.boxPoints(rect)
-    # convert all coordinates floating point values to int
-    box = np.int0(box)
-    # draw a red 'nghien' rectangle
-    cv2.drawContours(image, [box], 0, (255, 255, 0), 2)
-
-    # CROP THE IMAGE
-    # cv2.drawContours(image, contours, -1, (255, 255, 0), 2)
-    # crop = image[y:y + h, x:x + w]
-    '''
-    thresh_pad = cv2.copyMakeBorder(thresh, 20, 30, 30, 20, cv2.BORDER_CONSTANT, value=(0, 0, 0))
-
-    kernel = np.ones((5, 5), np.uint8)
-    iter = 1
-    erosion = cv2.erode(thresh_pad, kernel, iterations= iter)
-    dilation = cv2.dilate(thresh_pad, kernel, iterations= iter)
-    opening = cv2.morphologyEx(thresh_pad, cv2.MORPH_OPEN, kernel)
-    closing = cv2.morphologyEx(thresh_pad, cv2.MORPH_CLOSE, kernel)
-    gradient = cv2.morphologyEx(thresh_pad, cv2.MORPH_GRADIENT, kernel)
-    tophat = cv2.morphologyEx(thresh_pad, cv2.MORPH_TOPHAT, kernel)
-
-    # titles = ["erosion", "dilatation", "opening", "closing", "gradient", "tophat"]
-    # images = [erosion, dilation, opening, closing, gradient, tophat]
-    # title = "Test"
-    # tl.plotImages(titles, images, title, 2, 3)
-    
-    # find contours and get the external one
-    contours = cv2.findContours(erosion, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[1]
-    # contours = cv2.findContours(thresh_pad, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)[1]
-
-    cv2.drawContours(erosion, contours, -1, (0, 0, 255), 2)
-    '''
-    plt.subplot(121), plt.imshow(image)
-    plt.gray()
-    plt.axis('off')
-    plt.subplot(122), plt.imshow(thresh)
-    plt.gray()
-    plt.axis('off')
-    # tl.plt.imshow(crop, 'gray')
-    # tl.plt.show()
-
-    tl.plt.show()
-
-def skewCorrection(nameImage):
-    image = cv2.imread(nameImage)
-    # convert the image to grayscale and flip the foreground
-    # and background to ensure foreground is now "white" and
-    # the background is "black"
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    # gray = cv2.bitwise_not(gray)
-
-    # threshold the image, setting all foreground pixels to
-    # 255 and all background pixels to 0
-    thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
-    thresh_pad = cv2.copyMakeBorder(thresh,10,10,10,10,cv2.BORDER_CONSTANT,value=(0,0,0))
-
-    coords = np.column_stack(np.where(thresh_pad > 0))
-    rect = cv2.minAreaRect(coords)
-    # contours = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[1]
-    # rect = cv2.minAreaRect(max(contours, key=cv2.contourArea))
-    # print("Minimum area: {}".format(cv2.contourArea(max(contours, key=cv2.contourArea))))
-    box = cv2.boxPoints(rect)
-    # convert all coordinates floating point values to int
-    box = np.int0(box)
-    # draw a red 'nghien' rectangle
-    cv2.drawContours(image, [box], 0, (255, 255, 0), 2)
-
-
-    angle = rect[-1]
-    # print(angle)
-    if angle < -45:
-        angle = -(90 + angle)
-
-    # otherwise, just take the inverse of the angle to make
-    # it positive
-    else:
-        angle = -angle
-    # rotate the image to deskew it
-    (h, w) = image.shape[:2]
-    center = (w // 2, h // 2)
-    M = cv2.getRotationMatrix2D(center, angle, 1.0)
-    rotated = cv2.warpAffine(image, M, (w, h),
-                             flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
-    rotated_th = cv2.warpAffine(thresh_pad, M, (w, h),
-                             flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
-
-    cv2.drawContours(rotated, [box], 0, (255, 255, 0), 2)
-
-    titles = ["original", "gray", "thresh_pad", "rotated", "rotated thresh"]
-    images = [image, gray, thresh_pad, rotated, rotated_th]
-    title = "Test"
-    tl.plotImages(titles,images, title, 2, 3)
-    # show the output image
-    print("--- SKEW PROCESSING INFORMATION ---\n"
-          "Rotation angle of the image '{}': {:.3f}\n".format(basename(nameImage), angle))
-
-
-    # return rotated
-
-def skewCorrection2(nameImage):
-    image = cv2.imread(nameImage)
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    thresh = cv2.threshold(gray, 0, 50, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
-    thresh_pad = cv2.copyMakeBorder(thresh, 10, 10, 10, 10, cv2.BORDER_CONSTANT, value=(0, 0, 0))
-    # thresh_pad = cv2.copyMakeBorder(thresh, 20, 30, 30, 20, cv2.BORDER_CONSTANT, value=(0, 0, 0))
-    contours = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[1]
-    '''
-    for c in contours:
-        # get the bounding rect
-        x, y, w, h = cv2.boundingRect(c)
-        # draw a green rectangle to visualize the bounding rect
-        cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
-
-        # get the min area rect
-        rect = cv2.minAreaRect(c)
-        box = cv2.boxPoints(rect)
-        # convert all coordinates floating point values to int
-        box = np.int0(box)
-        # draw a red 'nghien' rectangle
-        cv2.drawContours(image, [box], 0, (255, 255, 0), 2)
-    '''
     # find the largest contour
     rect = cv2.minAreaRect(max(contours, key=cv2.contourArea))
     angle = rect[-1]
-    box = cv2.boxPoints(rect)
-    # convert all coordinates floating point values to int
-    box = np.int0(box)
-    # draw a red 'nghien' rectangle
-    cv2.drawContours(image, [box], 0, (255, 255, 0), 2)
 
-    # print(angle)
     if angle < -45:
         # angle_f = -(90 + angle)
         angle_f = (90 + angle)
-        print("{:.3f} < -45 --> {:.3f}".format(angle, angle_f))
+        # print("{:.3f} < -45 --> {:.3f}".format(angle, angle_f))
 
     # otherwise, just take the inverse of the angle to make
     # it positive
     else:
-        # angle_f = -angle
         angle_f = angle
-        print("{:.3f} > -45 --> {:.3f}".format(angle, angle_f))
+        # print("{:.3f} > -45 --> {:.3f}".format(angle, angle_f))
     # rotate the image to deskew it
     (h, w) = image.shape[:2]
     center = (w // 2, h // 2)
     M = cv2.getRotationMatrix2D(center, angle_f, 1.0)
     rotated = cv2.warpAffine(image, M, (w, h),
-                             flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_CONSTANT, borderValue= (0, 0, 0)) # BORDER_REPLICATE
-    rotated_th = cv2.warpAffine(thresh_pad, M, (w, h),
-                             flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_CONSTANT, borderValue= (0, 0, 0))
+                             flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_CONSTANT, borderValue=(0, 0, 0))
 
-    cv2.drawContours(rotated, [box], 0, (255, 255, 0), 2)
+    rotated_copy = rotated.copy()
+    rotated_gr_copy = cv2.cvtColor(rotated_copy, cv2.COLOR_BGR2GRAY)
+    thresh = cv2.threshold(rotated_gr_copy, 100, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
+    contours = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[1]
+    x, y, w, h = cv2.boundingRect(max(contours, key=cv2.contourArea))
+    cropped = rotated_gr_copy[y:y + h, x:x + w]
 
-    titles = ["original", "gray", "thresh_pad", "rotated", "rotated thresh"]
-    images = [image, gray, thresh_pad, rotated, rotated_th]
-    title = "Test"
-    tl.plotImages(titles,images, title, 2, 3)
-    # show the output image
-    print("--- SKEW PROCESSING INFORMATION ---\n"
-          "Rotation angle of the image '{}': {:.3f}\n"
-          "Final angle: {:.3f}".format(basename(nameImage), angle, angle_f))
+    if training:
+        titles = ["original", "rotated", "cropped"]
+        images = [image, rotated, cropped]
+        title = "Angle correction: {:.3f}º".format(angle_f)
+        tl.plotImages(titles, images, title, 1, 3)
+
+        print("--- ROTATION PROCESSING INFORMATION ---\n"
+              "Rotation angle of the image '{}': {:.3f}\n"
+              "Final angle: {:.3f}\n\n".format(basename(nameImage), angle, angle_f))
+
+    return cropped
 
 
-    # return rotated
+def calcHistogram(nameImage, image, k, training):
+    # image = cv2.imread(nameImage)
+    # image_g = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    image_array = image.reshape((image.shape[0] * image.shape[1], 1))
+    hist, bins = np.histogram(image.ravel(), 256, [0, 256])
 
-def extractDigitsOCR(ocrRef):
-    dict_list = []
-    # load the reference OCR image from disk, convert it to grayscale,
-    # and threshold it, such that the digits appear as *white* on a
-    # *black* background
-    # and invert it, such that the digits appear as *white* on a *black*
-    ref = cv2.imread(ocrRef)
-    ref = cv2.cvtColor(ref, cv2.COLOR_BGR2GRAY)
-    ref = cv2.threshold(ref, 10, 255, cv2.THRESH_BINARY_INV)[1]
-    # cv2.imshow("OCR-A", ref)
-    # cv2.waitKey(5000)
-    # cv2.destroyAllWindows()
+    clt = KMeans(n_clusters= k)
+    clt.fit(image_array)
+    centroids = sorted(clt.cluster_centers_)
+    # lvls = [int((centroids[0][0]+centroids[1][0])/2), int((centroids[1][0]+centroids[2][0])/2)]
+    lvls = [int(centroids[1][0]-5), int(centroids[1][0]+5)]
+    # Threshold the image based on the semi sum of the two last centroids of K-Means
+    thresh = cv2.threshold(image, lvls[1], 255, cv2.THRESH_BINARY)[1]
+    # thresh = cv2.threshold(image, lvls[0], lvls[1], cv2.THRESH_BINARY)[1]
+    # thresh = cv2.adaptiveThreshold(image, lvls[1], cv2.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.THRESH_BINARY, 13, 8)
+    if training:
+        print("--- HISTOGRAM PROCESSING INFORMATION ---\n"
+              "K-Means centroids for K = {}: {}\n"
+              "Threshold levels: {} - {}\n\n".format(k, centroids, lvls[0], lvls[1]))
+        # Plot the original image and his histogram
+        fig = plt.figure()
+        plt.subplot(131), plt.imshow(image)
+        plt.axis('off')
 
-    # find contours in the OCR-A image (i.e,. the outlines of the digits)
-    # sort them from left to right, and initialize a dictionary to map
-    # digit name to the ROI
-    refCnts = cv2.findContours(ref.copy(), cv2.RETR_EXTERNAL,
-                               cv2.CHAIN_APPROX_SIMPLE)[1]
-    refCnts = contours.sort_contours(refCnts, method="left-to-right")[0]
+        plt.subplot(132), plt.hist(hist, bins, [0, 256], color= 'black'), plt.hist(clt.cluster_centers_, 32, [0,256], color= 'r'),
+        plt.hist(lvls, 100, [0, 256], color='b')
+        plt.gray()
 
-    digits = {}
-    # loop over the OCR-A reference contours
-    for (i, c) in enumerate(refCnts):
-        # compute the bounding box for the digit, extract it, and resize
-        # it to a fixed size
-        (x, y, w, h) = cv2.boundingRect(c)
-        roi = ref[y:y + h, x:x + w]
-        roi = cv2.resize(roi, (57, 88))
+        plt.subplot(133), plt.imshow(thresh)
+        plt.axis('off')
 
-        # update the digits dictionary, mapping the digit name to the ROI
-        digits[i] = roi
-    return digits
+        fig.suptitle(basename(nameImage) + " image and Histogram", fontsize=14)
+        plt.show()
 
-def processImage(in_image):
-    '''
-    The 'processImage' function is the main in the current package. This function first corrects
-    the angle of the crotal and then, prepares the image applying some filters as top-hat and closing.
-    :param in_image:
-    :return:
-    '''
-    image_rotated = skewCorrection(in_image)
+    return thresh
 
-    # initialize a rectangular and square kernels for top-hat morphological and closing
-    # operations, respectively
-    thKernel = cv2.getStructuringElement(cv2.MORPH_RECT, (9, 3))
-    sqKernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
+def numExtraction(nameImage, bin_img, trainig):
+    h, w = bin_img.shape
+    print(bin_img.shape)
 
-    image_rotated = imutils.resize(image_rotated, width=300)
-    gray = cv2.cvtColor(image_rotated, cv2.COLOR_BGR2GRAY)
-    # cv2.imshow("OCR-A", gray)
-    # cv2.waitKey(5000)
-    # cv2.destroyAllWindows()
+    hist_y = np.sum(bin_img==0, axis=1)
+    # print(len(hist_y))
+    clt = KMeans(n_clusters= 4)
+    # print(len(hist_y.reshape(-1, 1)))
+    clt.fit(hist_y.reshape(-1, 1))
+    centroids = sorted(clt.cluster_centers_)
+    print(centroids)
+    print(len(centroids))
+    idx = np.where(np.flip(hist_y, 0) == int(centroids[-2][0]))[0][0]
+    roi_num = bin_img[idx-20 : h, 25:w-25]
+
+    if trainig:
+        print("Crop image from {}:{}, {}:{}".format(idx, h, 0, w - 1))
+        fig = plt.figure()
+        plt.subplot(131), plt.imshow(bin_img)
+        plt.axis('off')
+
+        plt.subplot(132), plt.hist(hist_y, h, color='black', orientation='horizontal'), \
+        plt.hist(clt.cluster_centers_, 40, color='r', orientation='horizontal')
+        plt.gca().invert_yaxis()
+        plt.gray()
+
+        plt.subplot(133), plt.imshow(roi_num)
+        plt.axis('off')
+
+        fig.suptitle(basename(nameImage) + " cropped and Histogram (y)", fontsize=14)
+        plt.show()

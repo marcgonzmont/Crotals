@@ -9,10 +9,10 @@ def getSamples(path):
               if isfile(join(path, f)) and f.endswith('.TIF')]
     return samples
 
-def getSamplesTess(path):
-    samples = [altsep.join((path, f)) for f in listdir(path)
-              if isfile(join(path, f)) and f.endswith('.jpg')]
-    return samples
+# def getSamplesTess(path):
+#     samples = [altsep.join((path, f)) for f in listdir(path)
+#               if isfile(join(path, f)) and f.endswith('.jpg')]
+#     return samples
 
 def makeDir(path):
     '''
@@ -62,11 +62,10 @@ def getGTcsv(file):
         return mydict
 
 def printInformation(args):
-    print("--- INFORMATION ---")
+    print("\n--- INFORMATION ---")
     print("Training path: {}\n"
           "Test path: {}\n"
-          "GT file: {}".format(args["training_path"], args["test_path"],args["gt_file"]))
-    reference = args["OCRreferenceA"] if args.get("OCRreferenceA") else args.get("OCRreferenceB")
-    print("OCR reference: {}".format(reference))
-    if args.get("output_path"):
-        print("Output path: {}\n\n".format(args["output_path"]))
+          "GT file: {}\n".format(args["training_path"], args["test_path"],args["gt_file"]))
+    if args.get("output_train_path") or args.get("output_test_path"):
+        print("Training output path: {}\n"
+              "Test output path: {}\n".format(args["output_train_path"], args["output_test_path"]))

@@ -1,4 +1,4 @@
-from Crotals.myPackage import tools as tl
+from myPackage import tools as tl
 from os.path import altsep, join
 from PIL import Image
 import pytesseract
