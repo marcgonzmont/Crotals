@@ -6,6 +6,25 @@ from os.path import basename
 from sklearn.cluster import KMeans
 
 
+def validateImage(nameImage, training):
+    image = cv2.imread(nameImage)
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
+    tot_px = image.shape[0]*image.shape[0]
+    num_black = tot_px - cv2.countNonZero(thresh)
+    if training:
+        print("\nImage:{}\n"
+              "Total pixels: {}\n"
+              "Black pixels: {}\n"
+              "Threshold: {}\n"
+              "Percentage: {:2.3f}\n".format(nameImage, tot_px, num_black, tot_px*0.5, (num_black/tot_px)*100))
+
+    if num_black > tot_px*0.75:
+        return False
+    else:
+        return True
+
+
 def calcKmeans(image, k):
     if len(image.shape) == 2:
         image_array = image.reshape((image.shape[0] * image.shape[1], 1))
@@ -13,17 +32,23 @@ def calcKmeans(image, k):
         image_array = image.reshape(-1, 1)
     clt = KMeans(n_clusters=k)
     clt.fit(image_array)
-    # centroids = sorted(clt.cluster_centers_)
+
     return clt.cluster_centers_
 
 
-def cleanImage(bin_img):
-    n = 3
-    kernel = (n, n)
-    # bin_img = cv2.erode(bin_img, kernel= kernel, iterations= 4)
-    # bin_img = cv2.dilate(bin_img, kernel= kernel, iterations= 4)
-    bin_img = cv2.morphologyEx(bin_img, cv2.MORPH_OPEN, kernel)
-    bin_img = cv2.morphologyEx(bin_img, cv2.MORPH_CLOSE, kernel)
+def cleanImage(bin_img, mode):
+    if mode == "hist":
+        n = 3
+        kernel = (n, n)
+        # bin_img = cv2.erode(bin_img, kernel= kernel, iterations= 4)
+        # bin_img = cv2.dilate(bin_img, kernel= kernel, iterations= 4)
+        bin_img = cv2.morphologyEx(bin_img, cv2.MORPH_OPEN, kernel)
+        bin_img = cv2.morphologyEx(bin_img, cv2.MORPH_CLOSE, kernel)
+    elif mode == "extr":
+        n = 3
+        kernel = (n, n)
+        bin_img = cv2.erode(bin_img, kernel= kernel, iterations= 2)
+
 
     return bin_img
 
@@ -63,7 +88,7 @@ def skewCorrection(nameImage, training):
     rotated_gr_copy = cv2.cvtColor(rotated_copy, cv2.COLOR_BGR2GRAY)
     thresh = cv2.threshold(rotated_gr_copy, lvls[0], lvls[1], cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
 
-    thresh = cleanImage(thresh)
+    thresh = cleanImage(thresh, "hist")
 
     contours = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[1]
 
@@ -96,7 +121,7 @@ def calcHistogram(nameImage, image, k, training):
     # Threshold the image based on the semi sum of the two last centroids of K-Means
     # thresh = cv2.threshold(image, lvls[1], 255, cv2.THRESH_BINARY)[1]
     thresh = cv2.threshold(img, lvls[1], 255, cv2.THRESH_BINARY)[1] # lvls[1], 255    lvls[0], lvls[1]
-    thresh = cleanImage(thresh)
+    thresh = cleanImage(thresh, "hist")
     if training:
 
         # print("--- HISTOGRAM PROCESSING INFORMATION ---\n"
@@ -131,7 +156,7 @@ def numExtraction(nameImage, bin_img, trainig):
     # print(len(hist_y.reshape(-1, 1)))
     # clt.fit(hist_y.reshape(-1, 1))
     # centroids = sorted(clt.cluster_centers_)
-
+    # bin_img = cleanImage(bin_img, "extr")
     print(centroids)
     print(len(centroids))
     idx = np.where(np.flip(hist_y, 0) == int(centroids[-2][0]))[0][0]

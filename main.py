@@ -27,9 +27,11 @@ if __name__ == '__main__':
     training = True
 
     for img in training_images:
-        cropped = cp.skewCorrection(img, not training)
-        bin_img = cp.calcHistogram(img, cropped, 3, training)
-        # number = cp.numExtraction(img, bin_img, training)
-        # break
-
-    sys.exit(2)
+        accept = cp.validateImage(img, not training)
+        if accept:
+            cropped = cp.skewCorrection(img, not training)
+            bin_img = cp.calcHistogram(img, cropped, 3, not training)
+            number = cp.numExtraction(img, bin_img, training)
+            # break
+        else:
+            continue
