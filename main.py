@@ -1,6 +1,7 @@
+import sys
 import argparse
 from myPackage import tools as tl
-from myPackage import imageProcess as imp
+from myPackage import crotalProcessing as cp
 
 
 if __name__ == '__main__':
@@ -24,14 +25,11 @@ if __name__ == '__main__':
     test_images = tl.natSort(tl.getSamples(args["test_path"]))
     gt_dict = tl.getGTcsv(args["gt_file"])
     training = True
-    # img = training_images[0]
-    # Loop for extract the images
-    # idx = 1
-    # image = cv2.imread(training_images[idx], 0)
-    for img in training_images:
-        cropped = imp.skewCorrection(img, training)
-        bin_img = imp.calcHistogram(img, cropped, 3, training)
-        number = imp.numExtraction(img, bin_img, training)
-        # imp.crotalContour(img)
-        # image_rotated = imp.skewCorrection(img)
 
+    for img in training_images:
+        cropped = cp.skewCorrection(img, not training)
+        bin_img = cp.calcHistogram(img, cropped, 3, training)
+        # number = cp.numExtraction(img, bin_img, training)
+        # break
+
+    sys.exit(2)
