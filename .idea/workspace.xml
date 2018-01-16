@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/myPackage/crotalProcessing.py" line="193" mnemonic="8" />
+    <bookmark url="file://$PROJECT_DIR$/myPackage/crotalProcessing.py" line="194" mnemonic="8" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b3f0c9bb-be4c-4b1b-adb3-5de2a6d7be48" name="Default" comment="" />
@@ -13,7 +13,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/Crotals$main.coverage" NAME="main Coverage Results" MODIFIED="1516115496319" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Crotals$main.coverage" NAME="main Coverage Results" MODIFIED="1516122618657" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="DatabaseView">
     <option name="SHOW_INTERMEDIATE" value="true" />
@@ -29,11 +29,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="main.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="main.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="326">
-              <caret line="45" column="54" lean-forward="false" selection-start-line="45" selection-start-column="54" selection-end-line="45" selection-end-column="54" />
+            <state relative-caret-position="204">
+              <caret line="48" column="33" lean-forward="true" selection-start-line="48" selection-start-column="33" selection-end-line="48" selection-end-column="33" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
               </folding>
@@ -41,11 +41,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="crotalProcessing.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="crotalProcessing.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/myPackage/crotalProcessing.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="64" column="24" lean-forward="false" selection-start-line="64" selection-start-column="24" selection-end-line="64" selection-end-column="24" />
+            <state relative-caret-position="166">
+              <caret line="228" column="15" lean-forward="false" selection-start-line="228" selection-start-column="11" selection-end-line="228" selection-end-column="15" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
               </folding>
@@ -65,7 +65,11 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find>boundingBox</find>
+      <find>salida</find>
     </findStrings>
+    <replaceStrings>
+      <replace>text</replace>
+    </replaceStrings>
   </component>
   <component name="Git.Settings">
     <option name="ROOT_SYNC" value="DONT_SYNC" />
@@ -85,8 +89,8 @@
         <option value="$PROJECT_DIR$/test.py" />
         <option value="$PROJECT_DIR$/myPackage/kmeansSelection.py" />
         <option value="$PROJECT_DIR$/myPackage/tools.py" />
-        <option value="$PROJECT_DIR$/myPackage/crotalProcessing.py" />
         <option value="$PROJECT_DIR$/main.py" />
+        <option value="$PROJECT_DIR$/myPackage/crotalProcessing.py" />
       </list>
     </option>
   </component>
@@ -247,7 +251,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32947367" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20028819" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3760807" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32947367" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14220877" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
@@ -328,6 +332,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="14484">
           <caret line="874" column="8" lean-forward="false" selection-start-line="874" selection-start-column="8" selection-end-line="874" selection-end-column="8" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -363,6 +368,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="14484">
           <caret line="874" column="8" lean-forward="false" selection-start-line="874" selection-start-column="8" selection-end-line="874" selection-end-column="8" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -398,6 +404,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="14484">
           <caret line="874" column="8" lean-forward="false" selection-start-line="874" selection-start-column="8" selection-end-line="874" selection-end-column="8" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -433,6 +440,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="14484">
           <caret line="874" column="8" lean-forward="false" selection-start-line="874" selection-start-column="8" selection-end-line="874" selection-end-column="8" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -563,6 +571,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="674">
           <caret line="874" column="8" lean-forward="false" selection-start-line="874" selection-start-column="8" selection-end-line="874" selection-end-column="8" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -570,13 +579,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="243">
           <caret line="430" column="4" lean-forward="false" selection-start-line="430" selection-start-column="4" selection-end-line="430" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/ProgramData/Anaconda3/envs/OpenCV-3.3/Lib/site-packages/PIL/Image.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="243">
-          <caret line="2200" column="4" lean-forward="false" selection-start-line="2200" selection-start-column="4" selection-end-line="2200" selection-end-column="4" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -615,6 +618,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="256">
           <caret line="3316" column="18" lean-forward="true" selection-start-line="3316" selection-start-column="18" selection-end-line="3316" selection-end-column="18" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -622,6 +626,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="256">
           <caret line="1709" column="4" lean-forward="false" selection-start-line="1709" selection-start-column="4" selection-end-line="1709" selection-end-column="4" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -637,6 +642,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="103">
           <caret line="2718" column="4" lean-forward="false" selection-start-line="2718" selection-start-column="4" selection-end-line="2718" selection-end-column="4" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -651,6 +657,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1445">
           <caret line="89" column="4" lean-forward="false" selection-start-line="89" selection-start-column="4" selection-end-line="89" selection-end-column="4" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -671,20 +678,28 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/myPackage/crotalProcessing.py">
+    <entry file="file://C:/ProgramData/Anaconda3/envs/OpenCV-3.3/Lib/site-packages/PIL/Image.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="64" column="24" lean-forward="false" selection-start-line="64" selection-start-column="24" selection-end-line="64" selection-end-column="24" />
+        <state relative-caret-position="302">
+          <caret line="2571" column="0" lean-forward="false" selection-start-line="2571" selection-start-column="0" selection-end-line="2571" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="48" column="33" lean-forward="true" selection-start-line="48" selection-start-column="33" selection-end-line="48" selection-end-column="33" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main.py">
+    <entry file="file://$PROJECT_DIR$/myPackage/crotalProcessing.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="326">
-          <caret line="45" column="54" lean-forward="false" selection-start-line="45" selection-start-column="54" selection-end-line="45" selection-end-column="54" />
+        <state relative-caret-position="166">
+          <caret line="228" column="15" lean-forward="false" selection-start-line="228" selection-start-column="11" selection-end-line="228" selection-end-column="15" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
           </folding>

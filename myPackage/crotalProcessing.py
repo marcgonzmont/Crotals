@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import pytesseract
+from time import sleep
 from myPackage import tools as tl
 from matplotlib import pyplot as plt
 from os.path import basename
@@ -209,18 +210,23 @@ def numExtraction(nameImage, bin_img, trainig= False):
         fig.suptitle(basename(nameImage) + ": ROI", fontsize=14)
         plt.show()
 
-        return roi_num
+    return roi_num
 
 def evaluate(nameImage, img_num, gt_num):
     pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files (x86)\\Tesseract-OCR\\tesseract.exe'
     tessdata_dir_config = '--tessdata-dir "C:\\Program Files (x86)\\Tesseract-OCR\\tessdata"'
-    filename = 'num_tmp.jpg'
+    # filename = 'num_tmp.jpg'
     success = False
 
-    cv2.imwrite(filename, img_num)
-    img = Image.open(filename)
-    text = pytesseract.image_to_string(img, config=tessdata_dir_config)
-    remove(filename)
+    # cv2.imwrite(filename, img_num)
+    # sleep(1)
+    # img = Image.open(filename)
+    text = pytesseract.image_to_string(Image.fromarray(img_num), config=tessdata_dir_config)
+    # remove(filename)
+    text = text.replace('-', '')
+    text = text.replace('.', '')
+    text = text.replace(' ', '')
+    text = text.replace('\n', '')
 
     if text == gt_num:
         success = True
@@ -228,6 +234,6 @@ def evaluate(nameImage, img_num, gt_num):
     print("Image: {}\n"
           "GT_num: {}\n"
           "Result: {}\n"
-          "Success: {}".format(nameImage, gt_num, text, success))
+          "Success: {}\n".format(basename(nameImage), gt_num, text, success))
 
     return success

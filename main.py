@@ -1,5 +1,6 @@
 import sys
 import argparse
+import time
 from myPackage import tools as tl
 from myPackage import crotalProcessing as cp
 
@@ -37,6 +38,7 @@ if __name__ == '__main__':
             else:
                 continue
     else:
+        start = time.time()
         for idx, img in enumerate(test_images):
             accept = cp.validateImage(img)
             if accept:
@@ -49,10 +51,12 @@ if __name__ == '__main__':
                     results[idx]=1
             else:
                 continue
+        end = time.time()
         true = cp.np.count_nonzero(results)
         false = len(results) - true
         print("--- TEST RESULTS ---\n"
+              "Execution time: {}\n"
               "Number of test images: {}\n"
               "True result: {} ({2.3f}%)\n"
               "False result: {} ({2.3f]%)\n"
-              "Rejected examples: {}".format(len(test_images), true, (true/len(test_images))*100, false, (false/len(test_images))*100, len(test_images)-processed))
+              "Rejected examples: {}".format(len(test_images), start-end, true, (true/len(test_images))*100, false, (false/len(test_images))*100, len(test_images)-processed))
