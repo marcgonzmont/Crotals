@@ -1,4 +1,5 @@
 import cv2
+import re
 import numpy as np
 import pytesseract
 from time import sleep
@@ -12,21 +13,27 @@ from sklearn.cluster import KMeans
 
 def validateImage(nameImage, training= False):
     image = cv2.imread(nameImage)
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
-    tot_px = image.shape[0]*image.shape[0]
-    num_black = tot_px - cv2.countNonZero(thresh)
-    if training:
-        print("\nImage:{}\n"
-              "Total pixels: {}\n"
-              "Black pixels: {}\n"
-              "Threshold: {}\n"
-              "Percentage: {:2.3f}\n".format(nameImage, tot_px, num_black, tot_px*0.5, (num_black/tot_px)*100))
+    if image.shape[0]*image.shape[1] != 0:
+        if image.shape[2] == 3:
+            gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        else:
+            gray = image
+        thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
+        tot_px = image.shape[0]*image.shape[0]
+        num_black = tot_px - cv2.countNonZero(thresh)
+        if training:
+            print("\nImage:{}\n"
+                  "Total pixels: {}\n"
+                  "Black pixels: {}\n"
+                  "Threshold: {}\n"
+                  "Percentage: {:2.3f}\n".format(nameImage, tot_px, num_black, tot_px*0.5, (num_black/tot_px)*100))
 
-    if num_black > tot_px*0.75:
-        return False
+        if num_black > tot_px*0.75:
+            return False
+        else:
+            return True
     else:
-        return True
+        return False
 
 
 def calcKmeans(image, k):
@@ -61,7 +68,7 @@ def cleanImage(bin_img, mode):
 def skewCorrection(nameImage, training= False):
     image = cv2.imread(nameImage)
     # print(image.shape)
-    if image.shape [2]==3:
+    if image.shape[2] == 3:
         # print("COLOR")
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     else:
@@ -218,15 +225,17 @@ def evaluate(nameImage, img_num, gt_num):
     # filename = 'num_tmp.jpg'
     success = False
 
-    # cv2.imwrite(filename, img_num)
-    # sleep(1)
-    # img = Image.open(filename)
-    text = pytesseract.image_to_string(Image.fromarray(img_num), config=tessdata_dir_config)
+    # text = pytesseract.image_to_string(Image.fromarray(img_num), config=tessdata_dir_config)
+    text = pytesseract.image_to_string(Image.fromarray(img_num), config='--psm 8 --eom 3 -c tessedit_char_whitelist=0123456789 --tessdata-dir=tessdata_dir_config')
+    # text = pytesseract.image_to_string(Image.fromarray(img_num),
+    #                                    config='--psm 6 --eom 3 -c tessedit_char_whitelist=0123456789 --tessdata-dir=tessdata_dir_config')
     # remove(filename)
     text = text.replace('-', '')
     text = text.replace('.', '')
     text = text.replace(' ', '')
     text = text.replace('\n', '')
+
+    text = re.sub('[A-Za-z,.-_]')
 
     if text == gt_num:
         success = True
