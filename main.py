@@ -41,9 +41,9 @@ if __name__ == '__main__':
             accept = cp.validateImage(img)
             if accept:
                 processed += 1
-                cropped = cp.skewCorrection(img, ~training)
-                bin_img = cp.calcHistogram(img, cropped, 3, ~training)
-                number = cp.numExtraction(img, bin_img, ~training)
+                cropped = cp.skewCorrection(img)
+                bin_img = cp.calcHistogram(img, cropped, 3)
+                number = cp.numExtraction(img, bin_img)
                 success = cp.evaluate(img, number, gt_numbers[idx])
                 if success:
                     results[idx]=1

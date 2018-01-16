@@ -59,9 +59,9 @@ def cleanImage(bin_img, mode):
 
 def skewCorrection(nameImage, training= False):
     image = cv2.imread(nameImage)
-    print(image.shape)
+    # print(image.shape)
     if image.shape [2]==3:
-        print("COLOR")
+        # print("COLOR")
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     else:
         gray = image
@@ -170,7 +170,7 @@ def numExtraction(nameImage, bin_img, trainig= False):
     hist_y = np.sum(bin_img==0, axis=1)
     # print(hist_y)
     mins_idx = np.where(hist_y == min(hist_y[int(len(hist_y)*0.48) : int(len(hist_y)*0.9)]))
-    maxs_idx = np.where(hist_y == max(hist_y[int(len(hist_y)*0.48) : int(len(hist_y))]))
+    maxs_idx = np.where(hist_y == max(hist_y[int(len(hist_y)*0.8) : int(len(hist_y))]))
     # print(mins)
     max_idx = maxs_idx[0][-1]
     if max_idx - 100 < mins_idx[0][-1]:
