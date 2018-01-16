@@ -21,12 +21,7 @@ if __name__ == '__main__':
     test_images = tl.natSort(tl.getSamples(args["test_path"]))
     gt_dict = tl.getGTcsv(args["gt_file"])
     gt_numbers = list(gt_dict.values())
-    # print(len(gt_dict), len(test_images))
-    # print(test_images)
-    # print(type(gt_numbers))
-    # for key, val in gt_dict.items():
-    #     print(key, "=>", val)
-
+ 
 
     training = False
     processed = 0
