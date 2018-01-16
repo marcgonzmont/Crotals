@@ -12,10 +12,6 @@ if __name__ == '__main__':
                     help="-te Test path of the samples")
     ap.add_argument("-gt", "--gt_file", required=True,
                     help="-gt GT file to measure the performance of the algorithm")
-    ap.add_argument("-otr", "--output_train_path", required=False,
-                    help="-o Path where the training results will be stored")
-    ap.add_argument("-ote", "--output_test_path", required=False,
-                    help="-o Path where the test results will be stored")
     args = vars(ap.parse_args())
 
     # Print information
@@ -24,14 +20,44 @@ if __name__ == '__main__':
     training_images = tl.natSort(tl.getSamples(args["training_path"]))
     test_images = tl.natSort(tl.getSamples(args["test_path"]))
     gt_dict = tl.getGTcsv(args["gt_file"])
-    training = True
+    gt_numbers = list(gt_dict.values())
+    # print(len(gt_dict), len(test_images))
+    # print(test_images)
+    # print(type(gt_numbers))
+    # for key, val in gt_dict.items():
+    #     print(key, "=>", val)
 
-    for img in training_images:
-        accept = cp.validateImage(img, not training)
-        if accept:
-            cropped = cp.skewCorrection(img, not training)
-            bin_img = cp.calcHistogram(img, cropped, 3, not training)
-            number = cp.numExtraction(img, bin_img, training)
-            # break
-        else:
-            continue
+
+    training = False
+    processed = 0
+    results = cp.np.zeros(len(test_images))
+
+    if training:
+        for img in training_images:
+            accept = cp.validateImage(img, training)
+            if accept:
+                cropped = cp.skewCorrection(img, training)
+                bin_img = cp.calcHistogram(img, cropped, 3, training)
+                number = cp.numExtraction(img, bin_img, training)
+            else:
+                continue
+    else:
+        for idx, img in enumerate(test_images):
+            accept = cp.validateImage(img)
+            if accept:
+                processed += 1
+                cropped = cp.skewCorrection(img, ~training)
+                bin_img = cp.calcHistogram(img, cropped, 3, ~training)
+                number = cp.numExtraction(img, bin_img, ~training)
+                success = cp.evaluate(img, number, gt_numbers[idx])
+                if success:
+                    results[idx]=1
+            else:
+                continue
+        true = cp.np.count_nonzero(results)
+        false = len(results) - true
+        print("--- TEST RESULTS ---\n"
+              "Number of test images: {}\n"
+              "True result: {} ({2.3f}%)\n"
+              "False result: {} ({2.3f]%)\n"
+              "Rejected examples: {}".format(len(test_images), true, (true/len(test_images))*100, false, (false/len(test_images))*100, len(test_images)-processed))

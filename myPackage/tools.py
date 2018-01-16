@@ -44,6 +44,8 @@ def plotImages(titles, images, title, row, col):
             plt.title(titles[i])
         plt.gray()
         plt.axis('off')
+
+    # plt.tight_layout()
     fig.suptitle(title, fontsize=14)
     plt.show()
 
