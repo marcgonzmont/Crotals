@@ -49,6 +49,16 @@ def plotImages(titles, images, title, row, col):
     fig.suptitle(title, fontsize=14)
     plt.show()
 
+def plotResults(names, idx, values):
+    fig1 = plt.bar(idx, values,
+                   color='g')
+    plt.xticks(idx, names)
+    plt.ylabel('# Samples')
+    fig1[1].set_color('r')
+    fig1[2].set_color('k')
+    plt.title('Test Results')
+    plt.show()
+
 def renameFiles(samples_path):
     files = listdir(samples_path)
     i = 0

@@ -30,9 +30,9 @@ if __name__ == '__main__':
 
     if training:
         for img in training_images:
-            accept = cp.validateImage(img, training)
+            accept = cp.validateImage(img)
             if accept:
-                cropped = cp.skewCorrection(img, training)
+                cropped = cp.skewCorrection(img)
                 bin_img = cp.calcHistogram(img, cropped, 3, training)
                 number = cp.numExtraction(img, bin_img, training)
             else:
@@ -54,9 +54,19 @@ if __name__ == '__main__':
         end = time.time()
         true = cp.np.count_nonzero(results)
         false = len(results) - true
+        rejected = len(test_images) - processed
+        total_samples = len(test_images)
+
         print("--- TEST RESULTS ---\n"
-              "Execution time: {}\n"
+              "Execution time: {:0.3f} seconds\n"
               "Number of test images: {}\n"
-              "True result: {} ({2.3f}%)\n"
-              "False result: {} ({2.3f]%)\n"
-              "Rejected examples: {}".format(len(test_images), start-end, true, (true/len(test_images))*100, false, (false/len(test_images))*100, len(test_images)-processed))
+              "Success results: {} ({:0.3f}%)\n"
+              "Fail results: {} ({:0.3f}%)\n"
+              "Rejected examples: {} ({:0.3f}%)".format(end-start, total_samples, true, (true/total_samples)*100, false, (false/total_samples)*100, rejected, (rejected/total_samples)*100))
+
+        names = ('Success', 'Fail', 'Rejected')
+        idx = cp.np.arange(len(names))
+        values = [true, false, rejected]
+        tl.plotResults(names, idx, values)
+
+    sys.exit(0)
