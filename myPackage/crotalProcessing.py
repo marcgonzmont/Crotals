@@ -68,14 +68,9 @@ def cleanImage(bin_img, mode):
 def skewCorrection(nameImage, training= False):
     image = cv2.imread(nameImage)
     if image.shape[2] == 3:
-        # print("COLOR")
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     else:
         gray = image
-    # centroids = sorted(calcKmeans(gray, 3))
-    # print(centroids)
-    # lvls = [int((centroids[0][0]+centroids[1][0])*0.7), int((centroids[1][0]+centroids[2][0])*0.4)]
-    # thresh = cv2.threshold(gray, lvls[0], lvls[1], cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
     thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
     contours = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[1]
 
@@ -104,7 +99,6 @@ def skewCorrection(nameImage, training= False):
 
     rotated_copy = rotated.copy()
     rotated_gr_copy = cv2.cvtColor(rotated_copy, cv2.COLOR_BGR2GRAY)
-    # thresh = cv2.threshold(rotated_gr_copy, lvls[0], lvls[1], cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
     thresh = cv2.threshold(rotated_gr_copy, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
 
     thresh = cleanImage(thresh, "hist")

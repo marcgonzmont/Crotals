@@ -1,11 +1,11 @@
 from os import listdir, makedirs, errno, rename
-from os.path import isfile, join, altsep
+from os.path import isfile, join
 from natsort import natsorted, ns
 from matplotlib import pyplot as plt
 import csv
 
 def getSamples(path):
-    samples = [altsep.join((path, f)) for f in listdir(path)
+    samples = [join(path, f) for f in listdir(path)
               if isfile(join(path, f)) and f.endswith('.TIF')]
     return samples
 

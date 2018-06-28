@@ -1,1 +1,1 @@
-To see an example for how to use tesserocr visit https://pypi.python.org/pypi/tesserocrCrotals
+﻿﻿﻿#CrotalesPata ejecutar el programa:`main.py -tr <training_path> -te <test_path> -gt <GT_file>`Para modo entrenamiento cambiar valor de la variable _training_ a _True_; si es _False_ es modo testTo see an example for how to use tesserocr visit https://pypi.python.org/pypi/tesserocrCrotals
